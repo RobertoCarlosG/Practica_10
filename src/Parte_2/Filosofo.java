@@ -21,7 +21,7 @@ public class Filosofo implements Runnable {
 			Util.mySleep(2000);
 			System.out.println("Filosofo "+consumidor+" comiendo con tenedor "+consumidor+" y tenedor"+ (consumidor+1)%5);
 			b.bajar_tenedores(consumidor);
-			System.out.println("Filosofo "+consumidor+" comiendo");
+			System.out.println("Filósofo "+consumidor+" bajando tenedor "+consumidor+" tenedor "+((consumidor+1)%5));
 		}
 	}
 	

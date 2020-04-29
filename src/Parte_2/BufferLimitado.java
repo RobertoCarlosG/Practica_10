@@ -19,7 +19,7 @@ public class BufferLimitado
 							    "PENSAR", "PENSAR"
 							  };
 	
-	public synchronized  void bajar_tenedores( int i )
+	public synchronized  void bajar_tenedores( int i ) 
 	{
 		//mutex.P();
 		if(i-1>=0)
@@ -35,9 +35,31 @@ public class BufferLimitado
 		//mutex.V();
 	}
 	
-	public synchronized  void tomar_tenedores( int i )
+	public synchronized  void tomar_tenedores( int i ) // INGRESO
 	{
 		//mutex.P(); // asegura la exclusión mutua
+		if(i-1<=0){
+			while(estadof[4]=="COMER"
+			        ||estadof[i+1]=="COMER")
+			    {//Condición de sincronización
+			      Util.myWait( this );
+			    }
+		}
+		if(i-1>=4){
+			while(estadof[i-1]=="COMER"
+			        ||estadof[0]=="COMER")
+			    {//Condición de sincronización
+			      Util.myWait( this );
+			    }
+		}
+		if(i<0&&i<4){
+			if(i-1<=0){
+				while(estadof[4]=="COMER"||estadof[i+1]=="COMER")
+				    {//Condición de sincronización
+				      Util.myWait( this );
+				    }
+			}
+		}
 		estadof[i] = "HAMBRE";
 		probar_bocado(i);
 		//mutex.V();
