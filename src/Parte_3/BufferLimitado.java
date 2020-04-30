@@ -1,7 +1,20 @@
-package Parte_2;
+package Parte_3;
+
 
 public class BufferLimitado
 {
+	final int size			= 5;
+	
+	SemaforoBinario mutex	= new SemaforoBinario(true);
+	SemaforoContador isFull = new SemaforoContador( 5 );
+	SemaforoBinario sinc[]	= {
+								new SemaforoBinario(false),
+								new SemaforoBinario(false),
+								new SemaforoBinario(false),
+								new SemaforoBinario(false),
+								new SemaforoBinario(false),
+								new SemaforoBinario(false)
+							  };
 
 	String estadof[]		= { 
 								"PENSAR", "PENSAR", "PENSAR",
@@ -10,7 +23,8 @@ public class BufferLimitado
 	
 	public synchronized  void bajar_tenedores( int i ) 
 	{
-		//mutex.P();
+		isFull.P(); // espera si el buffer está lleno
+		mutex.P();
 		if(i-1>=0)
 			probar_bocado(4);
 		else
@@ -21,12 +35,14 @@ public class BufferLimitado
 		else
 			probar_bocado(i+1);
 		estadof[i]="PENSAR";
-		//mutex.V();
+		mutex.V();
+		isFull.V(); // notifica a cualquier productor en espera
 	}
 	
 	public synchronized  void tomar_tenedores( int i ) // INGRESO
 	{
-		//mutex.P(); // asegura la exclusión mutua
+		isFull.P(); // espera si el buffer está lleno
+		mutex.P(); // asegura la exclusión mutua
 		if(i-1<=0){
 			while(estadof[4]=="COMER"
 			        ||estadof[i+1]=="COMER")
@@ -51,7 +67,8 @@ public class BufferLimitado
 		}
 		estadof[i] = "HAMBRE";
 		probar_bocado(i);
-		//mutex.V();
+		mutex.V();
+		isFull.V(); // notifica a cualquier productor en espera
 		//sinc[i].P();
 		return;
 	}

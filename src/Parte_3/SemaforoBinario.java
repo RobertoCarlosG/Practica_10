@@ -1,4 +1,4 @@
-package Parte_2;
+package Parte_3;
 
 public class SemaforoBinario { 
 	boolean value; 
